@@ -912,8 +912,14 @@ def _list_by_(*args):
         matched_lines = [line for line in lines if regexp.search(line)]
         lines = matched_lines[:]
 
-    if lines:
-        print(concat(lines)[:-1])
+    for line in lines:
+        m = re.search(re_control_codes, line)
+        line = re.sub(re_control_codes, '', line)
+        line = textwrap.fill(line[:], subsequent_indent=' '*10, width = _CONSOLE_WIDTH - 1)
+        if m:
+            line = m.group(0) + line
+        line = line + TERM_COLORS["default"]
+        print line
     print_x_of_y(lines, alines)
 
 
@@ -975,6 +981,7 @@ def list_context():
     lines, sorted = _list_("context", "@([\w\-'_]+)")
     print(concat(sorted)[:-1])
     print_x_of_y(sorted, lines)
+
 
 @command(False, 'top')
 @usage('\ttop',
