@@ -938,7 +938,7 @@ def _list_by_(*args):
         if m:
             line = m.group(0) + line
         line = line + TERM_COLORS["default"]
-        print line
+        print (line)
     print_x_of_y(lines, alines)
 
 
@@ -1027,9 +1027,9 @@ def list_top():
                 if m:
                     firstline2 = m.group(0) + firstline2
                 firstline2 = firstline2 + ' ...' + TERM_COLORS["default"]
-                print firstline2
+                print (firstline2)
             else:
-                print firstline + TERM_COLORS["default"]
+                print (firstline + TERM_COLORS["default"])
     print_x_of_y(sorted[:min(_TOP_LINES, i)], sorted)
 ### End LP Functions
 
