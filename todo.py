@@ -880,7 +880,7 @@ def _list_(by, regexp):
         # sort each of the sublists
 
     for innerlist in by_list:
-        todo[innerlist].sort(key=lambda no_number: re.sub(r' *\d+ ', '', no_number.lower()))
+        todo[innerlist].sort(key=lambda no_number: re.sub(r'^ *\d+ ', '', no_number.lower()))
         # the regular expression about in 'key' is to get rid of the number at the front
         #    of the line. Otherwise, items are just sorted by the order they're found
         #    in the file, which is what were were trying to fix...
