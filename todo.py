@@ -867,7 +867,7 @@ def _list_(by, regexp):
         todo.update(newlines)
         by_list = list(PRIORITIES)
 
-    by_list.sort()
+    by_list.sort(key=str.lower)
 
     regstr = '(\+\w+\s?)' if CONFIG["HIDE_PROJ"] else ''
     hide_proj_re = re.compile(regstr)
