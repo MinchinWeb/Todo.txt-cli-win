@@ -2,6 +2,7 @@
 
 # TODO.TXT-CLI-python
 # Copyright (C) 2011-2012  Sigmavirus24
+# Copyright (C) 2013       William Minchin
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -81,6 +82,7 @@ TERM_COLORS = {
         "default": "\033[0m", "reverse": "\033[7m",
         "bold": "\033[1m",
         }
+re_control_codes = re.compile("\033\[[0-9;]+m") #term colour control codes
 
 TODO_DIR = _path("~/.todo")
 CONFIG = {
@@ -103,7 +105,7 @@ CONFIG = {
         "ACTIONS": None,
         }
 _CONSOLE_WIDTH = 80 # the current config setup does not allow numbers, only text and 0 or 1
-_TOP_LINES = 16 # as above
+_TOP_LINES = 21 # as above
 
 
 for p in PRIORITIES:
@@ -827,6 +829,10 @@ def _list_(by, regexp):
         lines = format_lines(color_only=True)
         regexp = re.compile(regexp)
         for line in lines:
+            # take out the colour control codes, and then add them back in
+            # (we do this so that line lenght works)          
+            m = re.search(re_control_codes, line)
+            line = re.sub(re_control_codes, '', line)
             match = regexp.findall(line)
             if match:
                 line = textwrap.fill(line[:], initial_indent=' '*4, subsequent_indent=' '*14, width=_CONSOLE_WIDTH - 1) + '\n'
@@ -841,12 +847,22 @@ def _list_(by, regexp):
             else:
                 line = textwrap.fill(line[:], subsequent_indent=' '*10, width=_CONSOLE_WIDTH - 1) + '\n'
                 todo[nonetype].append(line)
+            # add first colour control back in
+            if m:
+                line = m.group(0) + line
     elif by == "pri":
         lines = format_lines()
         newlines = dict(zip(PRIORITIES, [[] for i in PRIORITIES]))
         for priority in lines:
             for line in lines[priority]:
+                # take out the colour control codes, and then add them back in
+                # (we do this so that line lenght works)
+                m = re.search(re_control_codes, line)
+                line = re.sub(re_control_codes, '', line)
                 l = textwrap.fill(line[:], subsequent_indent=' '*10, width=_CONSOLE_WIDTH - 1) + '\n'
+                # add first colour control back in
+                if m:
+                    l = m.group(0) + l
                 newlines[priority].append(l)
         todo.update(newlines)
         by_list = list(PRIORITIES)
@@ -967,8 +983,28 @@ def list_top():
     """Lists the top items from the 'listpri' command. The number of items is
     determined by the variable _TOP_LINES"""
     lines, sorted = _list_("pri", "")
-    print(concat(sorted[:_TOP_LINES])[:-1])
-    print_x_of_y(sorted[:_TOP_LINES], sorted)
+    i = -1
+    for line in sorted:
+        # we're only going to print one line of multiline items
+        i += 1
+        if i < _TOP_LINES:
+            newline = line[:-1].split('\n')
+            firstline = newline[0]
+            if len(newline) > 1:
+                # take out the colour control codes, and then add them back in
+                # (we do this so that line lenght works)
+                m = re.search(re_control_codes, newline[0])
+                firstline = re.sub(re_control_codes, '', firstline)
+                firstline = textwrap.fill(firstline[:], width = _CONSOLE_WIDTH - 5)
+                newline2 = firstline[:].split('\n')
+                firstline2 = newline2[0]
+                if m:
+                    firstline2 = m.group(0) + firstline2
+                firstline2 = firstline2 + ' ...' + TERM_COLORS["default"]
+                print firstline2
+            else:
+                print firstline + TERM_COLORS["default"]
+    print_x_of_y(sorted[:min(_TOP_LINES, i)], sorted)
 ### End LP Functions
 
 
