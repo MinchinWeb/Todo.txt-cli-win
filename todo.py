@@ -149,6 +149,10 @@ def separate_line(number):
     separate = None
     if lines and number - 1 < len(lines) and 0 <= number - 1:
         separate = lines.pop(number - 1)
+    if separate == None:
+        # not a valid line
+        print TERM_COLORS["yellow"] + "ERROR:" + TERM_COLORS["default"], "There is no item", str(number), "in your todo.txt."
+        sys.exit(0)
     return separate, lines
 
 
