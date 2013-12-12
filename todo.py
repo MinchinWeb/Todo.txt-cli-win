@@ -868,6 +868,15 @@ def _list_(by, regexp):
         by_list = list(PRIORITIES)
 
     by_list.sort(key=str.lower)
+    # sort each of the sublists
+    for innerlist in by_list:
+        todo[innerlist].sort(key=lambda no_number: re.sub(r' *\d+ ', '', no_number.lower()))
+        # the regular expression about in 'key' is to get rid of the number at the front
+        #    of the line. Otherwise, items are just sorted by the order they're found
+        #    in the file, which is what were were trying to fix...
+        # this causes items with priorities to float to the top, and for items to be
+        #    listed by their 'added' date (typically the first thing on the line,
+        #    following the priority, if there is one)
 
     regstr = '(\+\w+\s?)' if CONFIG["HIDE_PROJ"] else ''
     hide_proj_re = re.compile(regstr)
