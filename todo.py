@@ -867,8 +867,14 @@ def _list_(by, regexp):
         todo.update(newlines)
         by_list = list(PRIORITIES)
 
-    by_list.sort(key=str.lower)
-    # sort each of the sublists
+    if by == "date":
+        by_list.sort()
+        # if sorting by date, the by_list is of datetime objects, which cannot be directly
+        #    converted to lowercase strings
+    else:
+        by_list.sort(key=str.lower)
+        # sort each of the sublists
+
     for innerlist in by_list:
         todo[innerlist].sort(key=lambda no_number: re.sub(r' *\d+ ', '', no_number.lower()))
         # the regular expression about in 'key' is to get rid of the number at the front
