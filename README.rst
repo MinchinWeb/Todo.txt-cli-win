@@ -11,10 +11,7 @@ A port of the `popular todo.txt-cli project
 Information About This Branch
 -----------------------------
 
-This will feature a complete rewrite of the script. I'm going to model the 
-design after pip and change the API for making python add-ons. The latter is 
-dependent upon the former which is why this is needed. This branch will be 
-extremely unstable for a (hopefully) short period of time.
+This is my main development branch.
 
 Dependencies
 ------------
@@ -34,10 +31,19 @@ Installation
 
 From the repo
 `````````````
+Todo.py is designed to installed as is typical of Python packages. Download and
+unzip/untar the repo, move to the base directory of the repo on your computer,
+as at the command prompt, run
+
+``python setup.py install``
+
+This will install the program system-wide (as per your Python settings).
+
+
 If you want to install the copy locally (i.e. to a personal directory) you can
 simply download one of the packages_ and run the ``install.sh`` script.
 
-.. _packages: https://github.com/sigmavirus24/Todo.txt-python/downloads
+.. _packages: https://github.com/MinchinWeb/Todo.txt-python/downloads
 
 Be sure to run ``./install.sh -h`` first. You can decide where you would like
 the script installed (the default is ``$HOME/bin/``) and where you would like an
@@ -47,6 +53,7 @@ alias for the script, e.g., ``t`` or ``tpy``, written (the default is
 Using pypi
 ``````````
 
+(Note, this edition has not yet been uploaded to PyPi...)
 If you would prefer a system-wide installation, you can use install ``todo.py``
 from PyPi like so:
 
@@ -63,6 +70,23 @@ along the lines of:
 
     alias t='$HOME/bin/todo.py'
 
+Usage
+-----
+
+The basic command is ``todo``.
+
+To add an item: ``todo add [item +project @context]``
+
+To complete an item ``todo do (item number)``
+
+To add a priority (A thru Z) to an item: ``todo pri (A-Z) (item number)``
+
+To remove the priority from an item: ``todo depri (item number)``
+
+To list all items ``todo ls``
+
+There are many other commands available.
+	
 Hacking
 -------
 
@@ -75,7 +99,7 @@ Important Information
 - License: GPLv3_
 - Build Status: TravisCI_
 
-.. _GPLv3: https://raw.github.com/sigmavirus24/Todo.txt-python/master/LICENSE
+.. _GPLv3: https://raw.github.com/MinchinWeb/Todo.txt-python/development/LICENSE
 .. _TravisCI: http://travis-ci.org/MinchinWeb/Todo.txt-python
 
 --------

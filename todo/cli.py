@@ -22,12 +22,14 @@
 import os
 import re
 import sys
+import string
 import textwrap
 from optparse import OptionParser
 from datetime import datetime, date
 from getpass import getuser
+import __init__ as init
 
-VERSION = "WM-dev"
+VERSION = init.__version__
 REVISION = "$Id$"
 
 try:
@@ -50,7 +52,6 @@ except NameError:
     # Python 3 renamed raw_input to input
     pass
 
-import string
 if hasattr(string, 'uppercase'):
     PRIORITIES = string.uppercase
 elif hasattr(string, 'ascii_uppercase'):
@@ -1184,7 +1185,7 @@ def execute_commands(args):
     return 0
 
 
-def main():
+def run():
     CONFIG["TODO_PY"] = sys.argv[0]
     opts = opt_setup()
 
@@ -1210,4 +1211,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run()

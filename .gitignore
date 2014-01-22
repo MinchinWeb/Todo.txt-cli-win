@@ -1,11 +1,15 @@
 # Compiled Python files
-*.pyc
+*.py[c]
 
 *.swp
 *.tar*
 *.zip
 *.egg*
 docs/_build/
+build/
+dist/
+env/
+*.tfn
 
 # Microsoft Visual Studio 2013 PyTools files
 *.pyproj
