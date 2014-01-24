@@ -83,7 +83,7 @@ TERM_COLORS = {
         "default": "\033[0m", "reverse": "\033[7m",
         "bold": "\033[1m",
         }
-re_control_codes = re.compile(r'\\033\[[017](;3[0-9])*m') #term colour control codes
+re_control_codes = re.compile(r'\033\[[017](;3[0-9])*m') #term colour control codes
 
 TODO_DIR = _path("~/.todo")
 CONFIG = {
@@ -825,9 +825,9 @@ def format_lines(color_only=False, include_done=False):
             linedate = date(int(matchgroups2[3-1]), int(matchgroups2[4-1]), int(matchgroups2[5-1]))
             datedelta = date.today() - linedate
             if datedelta.days == 0:
-                deltastr = 'today'
+                adddelta = 'today'
             elif datedelta.days < 0:
-                detlastr = 'in the future'
+                adddetla = 'in the future'
             else:
                 # most common, and extected case
                 if datedelta.days < 45 + 7:
@@ -909,6 +909,10 @@ def _legacy_sort(items):
 
 def _list_(by, regexp):
     """Master list_*() function."""
+    plain = CONFIG["PLAIN"]
+    default = CONFIG.get("DEFAULT", "default")
+    default = TERM_COLORS[default] if not plain else ""
+
     nonetype = concat(["no", by])
     todo = {nonetype: []}
     by_list = []
@@ -924,7 +928,7 @@ def _list_(by, regexp):
             line = re.sub(re_control_codes, '', line)
             match = regexp.findall(line)
             if match:
-                line = textwrap.fill(line[:], initial_indent=' '*4, subsequent_indent=' '*14, width=_CONSOLE_WIDTH - 1) + '\n'
+                line = textwrap.fill(line[:], initial_indent=' '*4, subsequent_indent=' '*12, width=_CONSOLE_WIDTH - 1) + '\n'
                 for i in match:
                     if by == "date":
                         i = date(int(i[0]), int(i[1]), int(i[2]))
@@ -934,7 +938,7 @@ def _list_(by, regexp):
                     else:
                         todo[i].append(line)
             else:
-                line = textwrap.fill(line[:], subsequent_indent=' '*10, width=_CONSOLE_WIDTH - 1) + '\n'
+                line = textwrap.fill(line[:], subsequent_indent=' '*8, width=_CONSOLE_WIDTH - 1) + '\n'
                 todo[nonetype].append(line)
             # add first colour control back in
             if m:
@@ -948,10 +952,10 @@ def _list_(by, regexp):
                 # (we do this so that line lenght works)
                 m = re.search(re_control_codes, line)
                 line = re.sub(re_control_codes, '', line)
-                l = textwrap.fill(line[:], subsequent_indent=' '*10, width=_CONSOLE_WIDTH - 1) + '\n'
+                l = textwrap.fill(line[:], subsequent_indent=' '*8, width=_CONSOLE_WIDTH - 1) + '\n'
                 # add first colour control back in
                 if m:
-                    l = m.group(0) + l
+                    l = m.group(0) + l[:-1] + default + '\n'
                 newlines[priority].append(l)
         todo.update(newlines)
         by_list = list(PRIORITIES)
@@ -1019,7 +1023,7 @@ def _list_by_(*args):
     for line in lines:
         m = re.search(re_control_codes, line)
         line = re.sub(re_control_codes, '', line)
-        line = textwrap.fill(line[:], subsequent_indent=' '*10, width = _CONSOLE_WIDTH - 1)
+        line = textwrap.fill(line[:], subsequent_indent=' '*8, width = _CONSOLE_WIDTH - 1)
         if m:
             line = m.group(0) + line
         line = line + TERM_COLORS["default"]
