@@ -807,7 +807,9 @@ def format_lines(color_only=False, include_done=False):
         else:
             line2 = '  ' + line
 
-        ## Next, we move dates from the front to the end, and turn them from absolute
+        addingdates = False
+
+        ## Next, we move added dates from the front to the end, and turn them from absolute
         ## dates to relative dates
         pattern2 = re.compile('^([A-Z ] )((\d{4})-(\d{1,2})-(\d{1,2}) )')
         # \1 is the priority   eg. 'A '
@@ -816,8 +818,11 @@ def format_lines(color_only=False, include_done=False):
         # \4 is the month      eg. '01'
         # \5 is the day        eg. '23'
         if pattern2.match(line2):
-            matchgroups = pattern2.match(line2).groups()
-            linedate = date(int(matchgroups[3-1]), int(matchgroups[4-1]), int(matchgroups[5-1]))
+            # re.match() will only reture a result if the regex pattern is found at the start
+            #   of the string
+            # for searching starting elsewhere, use re.search()
+            matchgroups2 = pattern2.match(line2).groups()
+            linedate = date(int(matchgroups2[3-1]), int(matchgroups2[4-1]), int(matchgroups2[5-1]))
             datedelta = date.today() - linedate
             if datedelta.days == 0:
                 deltastr = 'today'
@@ -826,22 +831,63 @@ def format_lines(color_only=False, include_done=False):
             else:
                 # most common, and extected case
                 if datedelta.days < 45 + 7:
-                    deltastr = str(datedelta.days) + ' days ago'
+                    adddelta = str(datedelta.days) + ' days ago'
                 elif datedelta.days < 365*2:
-                    deltastr = str(datedelta.days/30) + ' months ago'
+                    adddelta = str(datedelta.days/30) + ' months ago'
                 else:
-                    deltastr = str(datedelta.days/365) + ' years ago'
+                    adddelta = str(datedelta.days/365) + ' years ago'
                     #TO-DO: strip 's' if singular
-            line3 = matchgroups[1-1] + pattern2.sub('', line2[:-1]) + ' (' + deltastr + ')\n'
+            line3 = matchgroups2[1-1] + pattern2.sub('', line2[:-1]) + '\n'
+            addingdates = True
         else:
+            adddelta = ''
             line3 = line2
+        
+        # Next for due dates
+        pattern3 = re.compile('( due:(\d{4})-(\d{1,2})-(\d{1,2}))')
+        if pattern3.search(line3):
+            matchgroups3 = pattern3.search(line3).groups()
+            linedate = date(int(matchgroups3[1]), int(matchgroups3[2]), int(matchgroups3[3]))
+            datedelta = date.today() - linedate # negative numbers means in the future (i.e. not due yet)
+            if datedelta.days == 0:
+                duedelta = 'due today'
+            elif datedelta.days > 0 and datedelta.days > (45+7):
+                duedelta = 'overdue by ' + str(datedelta.days) + ' days'
+            elif datedelta.days >= (45+7) and datedelta.days < (365*2):
+                duedelta = 'overdue by ' + str(datedelta.days/30) + ' months'
+            elif datedelta.days >= (365*2):
+                duedelta = 'overdue by ' + str(-1*datedelta.days/365) + ' years'
+            elif -1*datedelta.days > 0 and -1*datedelta.days < (45+7):
+                duedelta = 'due in ' + str(-1*datedelta.days) + ' days'
+            elif -1*datedelta.days >= (45+7) and -1*datedelta.days < (365*2):
+                duedelta = 'due in ' + str(-1*datedelta.days/30) + ' months'
+            elif -1*datedelta.days >= (365*2):
+                duedelta = 'due in ' + str(-1*datedelta.days/365) + ' years'
+            else:
+                # something broke
+                detastr = matchgroups3[1]
 
-        line4 = concat([color, invert, '{:>{mypad}}'.format(i+1,mypad=pad) + " " + line3[:-1], default, "\n"])
+            if addingdates is True:
+                duedelta = ', ' + duedelta
+            addingdates = True
+            line4 = pattern3.sub('', line3[:-1]) + '\n'
+        else:
+            duedelta = ''
+            line4 = line3
+
+        ## Next, we do the same for due dates
+
+        if addingdates is True:
+            line5 = line4[:-1].rstrip() + ' (' + adddelta + duedelta + ')\n'
+        else:
+            line5 = line4
+
+        line6 = concat([color, invert, '{:>{mypad}}'.format(i+1,mypad=pad) + " " + line5[:-1], default, "\n"])
 
         if color_only:
-            formatted.append(line4)
+            formatted.append(line6)
         else:
-            formatted[category].append(line4)
+            formatted[category].append(line6)
 
     return formatted
 
