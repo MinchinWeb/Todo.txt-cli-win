@@ -2,7 +2,7 @@
 
 # TODO.TXT-CLI-python
 # Copyright (C) 2011-2012  Sigmavirus24
-# Copyright (C) 2013       William Minchin
+# Copyright (C) 2013-2014  William Minchin
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ TERM_COLORS = {
         "default": "\033[0m", "reverse": "\033[7m",
         "bold": "\033[1m",
         }
-re_control_codes = re.compile("\033\[[0-9;]+m") #term colour control codes
+re_control_codes = re.compile(r'\\033\[[017](;3[0-9])*m') #term colour control codes
 
 TODO_DIR = _path("~/.todo")
 CONFIG = {
@@ -797,13 +797,51 @@ def format_lines(color_only=False, include_done=False):
                 color = TERM_COLORS[color_name]
             if no_priority:
                 line = pri_re.sub("", line)
+        
+        # This is where we re-arrange the text from the line in the todo file
+        ## First, remove brackets around priority
+        ## If no priority, put a space
+        pattern = re.compile('^\(([A-Z])\) ')
+        if pattern.match(line):
+            line2 = pattern.sub(r'\1 ', line)
+        else:
+            line2 = '  ' + line
 
-        l = concat([color, invert, '{:>{mypad}}'.format(i+1,mypad=pad) + " " + line[:-1], default, "\n"])
+        ## Next, we move dates from the front to the end, and turn them from absolute
+        ## dates to relative dates
+        pattern2 = re.compile('^([A-Z ] )((\d{4})-(\d{1,2})-(\d{1,2}) )')
+        # \1 is the priority   eg. 'A '
+        # \2 is the whole date eg. '2013-01-23 '
+        # \3 is the year       eg. '2013'
+        # \4 is the month      eg. '01'
+        # \5 is the day        eg. '23'
+        if pattern2.match(line2):
+            matchgroups = pattern2.match(line2).groups()
+            linedate = date(int(matchgroups[3-1]), int(matchgroups[4-1]), int(matchgroups[5-1]))
+            datedelta = date.today() - linedate
+            if datedelta.days == 0:
+                deltastr = 'today'
+            elif datedelta.days < 0:
+                detlastr = 'in the future'
+            else:
+                # most common, and extected case
+                if datedelta.days < 45 + 7:
+                    deltastr = str(datedelta.days) + ' days ago'
+                elif datedelta.days < 365*2:
+                    deltastr = str(datedelta.days/30) + ' months ago'
+                else:
+                    deltastr = str(datedelta.days/365) + ' years ago'
+                    #TO-DO: strip 's' if singular
+            line3 = matchgroups[1-1] + pattern2.sub('', line2[:-1]) + ' (' + deltastr + ')\n'
+        else:
+            line3 = line2
+
+        line4 = concat([color, invert, '{:>{mypad}}'.format(i+1,mypad=pad) + " " + line3[:-1], default, "\n"])
 
         if color_only:
-            formatted.append(l)
+            formatted.append(line4)
         else:
-            formatted[category].append(l)
+            formatted[category].append(line4)
 
     return formatted
 

@@ -75,15 +75,12 @@ Usage
 
 The basic command is ``todo``.
 
-To add an item: ``todo add [item +project @context]``
-
-To complete an item ``todo do (item number)``
-
-To add a priority (A thru Z) to an item: ``todo pri (A-Z) (item number)``
-
-To remove the priority from an item: ``todo depri (item number)``
-
-To list all items ``todo ls``
+* To add an item: ``todo add [item +project @context]``
+* To complete an item" ``todo do (item number)``
+* To delete an item: ``todo del (item number)``
+* To add a priority (A thru Z) to an item: ``todo pri (A-Z) (item number)``
+* To remove the priority from an item: ``todo depri (item number)``
+* To list all items ``todo ls``
 
 There are many other commands available.
 	

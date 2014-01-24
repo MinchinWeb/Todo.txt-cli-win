@@ -4,11 +4,11 @@ History
 0.4 Beta
 -------
 - convert from script to a system command (i.e. from ``todo.py`` to ``todo.exe``
-  on Windows)
+  on Windows), courtesy of @minchinweb
 - added ``top`` subcommand, that only displays the top 21 todo items (a
   screenful), courtesy of @minchinweb
 - priorities now run A-Z (were A-X)
-- hanging indent on long todo items courtesy of @minchinweb
+- hanging indent on long todo items, courtesy of @minchinweb
 - Properly handle paths on windows with colons & backslashes courtesy @mstave 
   (commit message shows his name as unknown unfortunately: 
   3a8b7673cd85e8ec6d29c6832b5bcb2afdbb44c1)
