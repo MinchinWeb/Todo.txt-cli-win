@@ -851,7 +851,7 @@ def format_lines(color_only=False, include_done=False):
             datedelta = date.today() - linedate # negative numbers means in the future (i.e. not due yet)
             if datedelta.days == 0:
                 duedelta = 'due today'
-            elif datedelta.days > 0 and datedelta.days > (45+7):
+            elif datedelta.days > 0 and datedelta.days < (45+7):
                 duedelta = 'overdue by ' + str(datedelta.days) + ' days'
             elif datedelta.days >= (45+7) and datedelta.days < (365*2):
                 duedelta = 'overdue by ' + str(datedelta.days/30) + ' months'
