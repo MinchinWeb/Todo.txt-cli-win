@@ -1,4 +1,4 @@
-todo.py
+wm_todo
 =======
 
 .. image:: https://secure.travis-ci.org/MinchinWeb/Todo.txt-python.png?branch=development
@@ -6,7 +6,7 @@ todo.py
     :target: http://travis-ci.org/MinchinWeb/Todo.txt-python
 
 A port of the `popular todo.txt-cli project
-<https://github.com/ginatrapani/todo.txt-cli>`_ from bash to python.
+<https://github.com/ginatrapani/todo.txt-cli>`_ to Python.
 
 Information About This Branch
 -----------------------------
@@ -21,10 +21,11 @@ repository which tracks the related files. Running the script once will give
 you the URL to download it. Please note that GitPython is written for ``git
 --version`` 1.7.2+.
 
-If you're on Windows and running the script out of cmd.exe, install 
-colorama for 'termcolor' support.
+If you're on Windows Coloram_ is required and provides support for colours
+in the command line output.
 
 .. _GitPython: https://github.com/gitpython-developers/GitPython
+.. _Colorama: https://pypi.python.org/pypi/colorama
 
 Installation
 ------------
@@ -40,10 +41,11 @@ as at the command prompt, run
 This will install the program system-wide (as per your Python settings).
 
 
-If you want to install the copy locally (i.e. to a personal directory) you can
+If you want to install the copy locally (i.e. to a personal directory) (Linux
+and MacOS only) you can
 simply download one of the packages_ and run the ``install.sh`` script.
 
-.. _packages: https://github.com/MinchinWeb/Todo.txt-python/downloads
+.. _packages: https://github.com/MinchinWeb/Todo.txt-python/releases
 
 Be sure to run ``./install.sh -h`` first. You can decide where you would like
 the script installed (the default is ``$HOME/bin/``) and where you would like an
@@ -54,12 +56,12 @@ Using pypi
 ``````````
 
 (Note, this edition has not yet been uploaded to PyPi...)
-If you would prefer a system-wide installation, you can use install ``todo.py``
+If you would prefer a system-wide installation, you can use install ``wm_todo``
 from PyPi like so:
 
 ::
 
-    $ pip install todo.py
+    $ pip install wm_todo
 
 Be aware that making a system-wide installation will not automattically create
 an alias for your use. You will have to edit either your ``.bashrc`` or

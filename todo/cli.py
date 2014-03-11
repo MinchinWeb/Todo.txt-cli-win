@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # TODO.TXT-CLI-python
 # Copyright (C) 2011-2012  Sigmavirus24
@@ -24,6 +25,7 @@ import re
 import sys
 import string
 import textwrap
+import webbrowser
 from optparse import OptionParser
 from datetime import datetime, date
 from getpass import getuser
@@ -63,7 +65,7 @@ if os.name == "nt":
         init()
     except Exception:
         pass
-    # colorama provides ANSI -> win32 color support
+    # colorama provides ANSI -> win32 colour support
     # If they don't have it, no worries.
 
 # concat() is necessary long before the grouping of function declarations
@@ -83,7 +85,15 @@ TERM_COLORS = {
         "default": "\033[0m", "reverse": "\033[7m",
         "bold": "\033[1m",
         }
-re_control_codes = re.compile(r'\033\[[017](;3[0-9])*m') #term colour control codes
+		
+#  term colour control codes
+re_control_codes = re.compile(r'\033\[[017](;[034][0-9])*m|\x1b\[[034][0-9]*m') 
+
+# The regex patterns are intended only to match web URLs -- http,
+# https, and naked domains like "example.com".
+# from https://gist.github.com/gruber/8891611
+re_weburl = re.compile(r'(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:\'".,<>?������])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.](?:com|net|org|edu|gov|mil|aero|asia|biz|cat|coop|info|int|jobs|mobi|museum|name|post|pro|tel|travel|xxx|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cs|cu|cv|cx|cy|cz|dd|de|dj|dk|dm|do|dz|ec|ee|eg|eh|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|Ja|sk|sl|sm|sn|so|sr|ss|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)\b/?(?!@)))')
+
 
 TODO_DIR = _path("~/.todo")
 CONFIG = {
@@ -851,13 +861,13 @@ def format_lines(color_only=False, include_done=False):
             datedelta = date.today() - linedate # negative numbers means in the future (i.e. not due yet)
             if datedelta.days == 0:
                 duedelta = 'due today'
-            elif datedelta.days > 0 and datedelta.days < (45+7):
+            elif datedelta.days > 0 and datedelta.days < (61):
                 duedelta = 'overdue by ' + str(datedelta.days) + ' days'
             elif datedelta.days >= (45+7) and datedelta.days < (365*2):
                 duedelta = 'overdue by ' + str(datedelta.days/30) + ' months'
             elif datedelta.days >= (365*2):
                 duedelta = 'overdue by ' + str(-1*datedelta.days/365) + ' years'
-            elif -1*datedelta.days > 0 and -1*datedelta.days < (45+7):
+            elif -1*datedelta.days > 0 and -1*datedelta.days < (61):
                 duedelta = 'due in ' + str(-1*datedelta.days) + ' days'
             elif -1*datedelta.days >= (45+7) and -1*datedelta.days < (365*2):
                 duedelta = 'due in ' + str(-1*datedelta.days/30) + ' months'
@@ -1107,7 +1117,7 @@ def list_top():
             firstline = newline[0]
             if len(newline) > 1:
                 # take out the colour control codes, and then add them back in
-                # (we do this so that line lenght works)
+                # (we do this so that line length works)
                 m = re.search(re_control_codes, newline[0])
                 firstline = re.sub(re_control_codes, '', firstline)
                 firstline = textwrap.fill(firstline[:], width = _CONSOLE_WIDTH - 5)
@@ -1121,6 +1131,23 @@ def list_top():
                 print (firstline + TERM_COLORS["default"])
     print_x_of_y(sorted[:min(_TOP_LINES, i)], sorted)
 ### End LP Functions
+
+
+### Other User-accessed function
+@command(True, 'url')
+@usage('\turl NUMBER',
+       "\t\tOpens the first URL found in the default web browser.\n")
+def call_url(line_no):
+    """Opens the URL listed on a line in the web browser."""
+    if not line_no.isdigit():
+        print("Usage: {0} url item#".format(CONFIG["TODO_PY"]))
+    else:
+        line_text, lines = separate_line(int(line_no))
+        if test_separated(line_text, lines, line_no):
+            return
+
+        if re_weburl.search(line_text):
+            webbrowser.open(re_weburl.search(line_text).group(0), new=2)
 
 
 ### Callback functions for options
