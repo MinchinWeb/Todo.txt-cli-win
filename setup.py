@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import
 import sys
 import os
 from os.path import join, dirname
@@ -22,10 +23,10 @@ conditional_dependencies = {
 }
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
-def get_version(filename="todo/__init__.py"):
+def get_version(filename="todo/__version__.py"):
     with open(os.path.join(base_dir, filename)) as initfile:
         for line in initfile.readlines():
-            m = re.match("__version__ *= *['\"](.*)['\"]", line)
+            m = re.match("__v__ *= *['\"](.*)['\"]", line)
             if m:
                 return m.group(1)
 
@@ -54,7 +55,7 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: IronPython',
         'Programming Language :: Python :: Implementation :: PyPy',
