@@ -843,9 +843,9 @@ def format_lines(color_only=False, include_done=False):
                 if datedelta.days < 45 + 7:
                     adddelta = str(datedelta.days) + ' days ago'
                 elif datedelta.days < 365*2:
-                    adddelta = str(datedelta.days/30) + ' months ago'
+                    adddelta = str(datedelta.days//30) + ' months ago'
                 else:
-                    adddelta = str(datedelta.days/365) + ' years ago'
+                    adddelta = str(datedelta.days//365) + ' years ago'
                     #TO-DO: strip 's' if singular
             line3 = matchgroups2[1-1] + pattern2.sub('', line2[:-1]) + '\n'
             addingdates = True
