@@ -1,5 +1,5 @@
 # Compiled Python files
-*.py[c]
+*.py[cod]
 
 *.swp
 *.tar*
@@ -9,6 +9,7 @@ docs/_build/
 build/
 dist/
 env/
+env3/
 *.tfn
 
 # Microsoft Visual Studio 2013 PyTools files

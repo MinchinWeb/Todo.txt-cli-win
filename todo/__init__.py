@@ -1,3 +1,5 @@
-__version__='0.4b4'
+from __future__ import absolute_import
 
-import cli
+from . import cli
+from .__version__ import __v__ as __version__
+

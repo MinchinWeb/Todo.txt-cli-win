@@ -20,6 +20,7 @@
 #
 # TLDR: This is licensed under the GPLv3. See LICENSE for more details.
 
+from __future__ import absolute_import
 import os
 import re
 import sys
@@ -29,9 +30,8 @@ import webbrowser
 from optparse import OptionParser
 from datetime import datetime, date
 from getpass import getuser
-import __init__ as init
+from .__version__ import __v__ as VERSION
 
-VERSION = init.__version__
 REVISION = "$Id$"
 
 try:
