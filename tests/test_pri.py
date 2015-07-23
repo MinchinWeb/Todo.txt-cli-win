@@ -28,26 +28,26 @@ except:
 class PrioritizeTest(base.BaseTest):
 
     def test_prioritize(self):
-        todo.addm_todo("\n".join(self._test_lines_no_pri(self.num)))
+        todo.cli.addm_todo("\n".join(self._test_lines_no_pri(self.num)))
 
-        n = len(todo.PRIORITIES)
+        n = len(todo.cli.PRIORITIES)
         for i in range(0, self.num):
-            todo.prioritize_todo([str(i + 1), todo.PRIORITIES[i % n]])
+            todo.cli.prioritize_todo([str(i + 1), todo.cli.PRIORITIES[i % n]])
 
         self.assertNumLines(self.num, "\([A-Z]\)\sTest\s\d+")
 
         for i in range(0, self.num):
-            todo.prioritize_todo([str(i + 1), todo.PRIORITIES[-i % n]])
+            todo.cli.prioritize_todo([str(i + 1), todo.cli.PRIORITIES[-i % n]])
 
         self.assertNumLines(self.num, "\([A-Z]\)\sTest\s\d+")
 
         for i in range(0, self.num):
-            todo.de_prioritize_todo(str(i + 1))
+            todo.cli.de_prioritize_todo(str(i + 1))
 
         self.assertNumLines(0, "\([A-Z]\)\sTest\s\d+")
 
         for i in range(0, self.num):
-            todo.prioritize_todo([str(i + 1), todo.PRIORITIES[-i % n]])
+            todo.cli.prioritize_todo([str(i + 1), todo.cli.PRIORITIES[-i % n]])
 
         self.assertNumLines(self.num, "\([A-Z]\)\sTest\s\d+")
 

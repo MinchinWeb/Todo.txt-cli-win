@@ -23,7 +23,7 @@ import unittest
 class TestUsage(base.BaseTest):
 
     def test_usage(self):
-        @todo.usage('Test usage')
+        @todo.cli.usage('Test usage')
         def func():
             pass
 

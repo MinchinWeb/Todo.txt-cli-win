@@ -27,8 +27,8 @@ sys.path.insert(0, os.path.abspath('..'))
 
 import todo
 
-todotxt = todo.CONFIG["TODO_FILE"] = "test_todo.txt"
-donetxt = todo.CONFIG["DONE_FILE"] = "test_done.txt"
+todotxt = todo.cli.CONFIG["TODO_FILE"] = "test_todo.txt"
+donetxt = todo.cli.CONFIG["DONE_FILE"] = "test_done.txt"
 
 class BaseTest(unittest.TestCase):
     num = 52
@@ -37,9 +37,9 @@ class BaseTest(unittest.TestCase):
         pass
 
     def setUp(self):
-        todo.CONFIG["PRE_DATE"] = False
-        todo.CONFIG["TODO_PY"] = "testing"
-        todo.default_config = self.default_config
+        todo.cli.CONFIG["PRE_DATE"] = False
+        todo.cli.CONFIG["TODO_PY"] = "testing"
+        todo.cli.default_config = self.default_config
         sys.stdout = open(os.devnull, 'w')
         open(todotxt, "w+").close()
         open(donetxt, "w+").close()
@@ -55,7 +55,7 @@ class BaseTest(unittest.TestCase):
 
     def count_matches(self, regexp=None):
         count = 0
-        for line in todo.iter_todos():
+        for line in todo.cli.iter_todos():
             if regexp == None or re.match(regexp, line):
                 count += 1
         return count
@@ -66,8 +66,8 @@ class BaseTest(unittest.TestCase):
 
 
     def _test_lines_pri(self, num):
-        n = len(todo.PRIORITIES)
-        p = todo.PRIORITIES
+        n = len(todo.cli.PRIORITIES)
+        p = todo.cli.PRIORITIES
         return ["({0}) Test {1}".format(p[i % n], i) for i in range(0, num)]
 
 
@@ -77,7 +77,7 @@ class BaseTest(unittest.TestCase):
         start_date = datetime.date.today()
 
         for d, l in zip((start_date + datetime.timedelta(n) for n in range(num)), l):
-            m.append(todo.concat([l, " #{%s}" % d.isoformat()]))
+            m.append(todo.cli.concat([l, " #{%s}" % d.isoformat()]))
         return m
 
 
@@ -88,7 +88,7 @@ class BaseTest(unittest.TestCase):
         l = self._test_lines_pri(num)
         m = []
         for i in range(0, num):
-            m.append(todo.concat([l[i], projects[i % n]], " "))
+            m.append(todo.cli.concat([l[i], projects[i % n]], " "))
         return m
 
 
@@ -99,7 +99,7 @@ class BaseTest(unittest.TestCase):
         l = self._test_lines_pri(num)
         m = []
         for i in range(0, num):
-            m.append(todo.concat([l[i], contexts[i % n]], " "))
+            m.append(todo.cli.concat([l[i], contexts[i % n]], " "))
         return m
 
 

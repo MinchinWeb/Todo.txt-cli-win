@@ -31,10 +31,10 @@ class TestConfig(base.BaseTest):
         super(TestConfig, self).setUp()
 
     def tearDown(self):
-        todo.CONFIG = self.backup
+        todo.cli.CONFIG = self.backup
 
     def config_assert(self, key, val):
-        self.assertEquals(todo.CONFIG[key], val)
+        self.assertEquals(todo.cli.CONFIG[key], val)
 
     def _validate_(self, filename):
         filename = self.sub(filename)
@@ -50,13 +50,13 @@ class TestConfig(base.BaseTest):
                 self.config_assert(key, val)
 
     def test_configs(self):
-        self.backup = todo.CONFIG.copy()
+        self.backup = todo.cli.CONFIG.copy()
         self.environ = os.environ.copy()
         for f in os.listdir('tests/config/'):
             if f.endswith('config'):
                 f = ''.join(['tests/config/', f])
-                todo.get_config(config_name=f)
+                todo.cli.get_config(config_name=f)
                 self._validate_(f)
-                todo.CONFIG = self.backup.copy()
+                todo.cli.CONFIG = self.backup.copy()
                 os.environ = self.environ.copy()
 

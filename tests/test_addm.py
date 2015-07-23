@@ -32,10 +32,10 @@ class TestAddm(base.BaseTest):
         self.assertNumLines(self.num, "\d{4}-\d{2}-\d{2}.*Test \d+")
 
     def addm_todo(self, n):
-        todo.addm_todo("\n".join(self._test_lines_no_pri(n)))
+        todo.cli.addm_todo("\n".join(self._test_lines_no_pri(n)))
 
     def addm_todo_predate(self, n):
-        todo.CONFIG["PRE_DATE"] = True
+        todo.cli.CONFIG["PRE_DATE"] = True
         self.addm_todo(n)
 
 if __name__ == "__main__":

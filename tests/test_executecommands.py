@@ -25,20 +25,20 @@ class TestExecute(base.BaseTest):
 
     def setUp(self):
         super(TestExecute, self).setUp()
-        self.back_up = todo.commands.copy()
+        self.back_up = todo.cli.commands.copy()
         args_msg = '{0} is expecting args to be passed to it, but none are.'
         noargs_msg = '{0} is having args passed during execution when none should be.'
-        for (k, v) in todo.commands.items():
-            if todo.commands[k][0]:
-                todo.commands[k] = (todo.commands[k][0], partial(self.assert_args,
+        for (k, v) in todo.cli.commands.items():
+            if todo.cli.commands[k][0]:
+                todo.cli.commands[k] = (todo.cli.commands[k][0], partial(self.assert_args,
                     args_msg.format(k)))
             else:
-                todo.commands[k] = (todo.commands[k][0], partial(self.assert_no_args,
+                todo.cli.commands[k] = (todo.cli.commands[k][0], partial(self.assert_no_args,
                     noargs_msg.format(k)))
 
     def tearDown(self):
         super(TestExecute, self).tearDown()
-        todo.commands = self.back_up.copy()
+        todo.cli.commands = self.back_up.copy()
     
     def assert_args(self, msg, *args):
         self.assertIsNotNone(args, msg)
@@ -50,7 +50,7 @@ class TestExecute(base.BaseTest):
     def test_execution(self):
         _args = ('foo', 'bar', 'bogus')
 
-        for command in todo.commands:
+        for command in todo.cli.commands:
             args = [command]
             args.extend(_args)
-            todo.execute_commands(args)
+            todo.cli.execute_commands(args)

@@ -16,6 +16,7 @@
 # 
 # TLDR: This is licensed under the GPLv3. See LICENSE for more details.
 
+from __future__ import absolute_import
 import os
 import todo
 import base
@@ -32,17 +33,17 @@ class TestAdd(base.BaseTest):
         self.assertNumLines(self.num, "\d{4}-\d{2}-\d{2}.*Test \d+")
 
     def test_add_nofile(self):
-        os.unlink(todo.CONFIG["TODO_FILE"])
+        os.unlink(todo.cli.CONFIG["TODO_FILE"])
         self.test_add()
 
     def add_todo(self, n):
         lines = self._test_lines_no_pri(n)
         for line in lines:
-            todo.add_todo(line)
+            todo.cli.add_todo(line)
 
     def add_todo_predate(self, n):
-        _pre = todo.CONFIG["PRE_DATE"]
-        todo.CONFIG["PRE_DATE"] = True
+        _pre = todo.cli.CONFIG["PRE_DATE"]
+        todo.cli.CONFIG["PRE_DATE"] = True
         self.add_todo(n)
 
 if __name__ == "__main__":

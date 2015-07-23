@@ -23,10 +23,10 @@ import todo
 class AppendTest(base.BaseTest):
 
     def test_append(self):
-        todo.addm_todo("\n".join(self._test_lines_no_pri(self.num)))
+        todo.cli.addm_todo("\n".join(self._test_lines_no_pri(self.num)))
 
         for i in range(1, self.num + 1):
-            todo.append_todo([str(i), "testing", "append"])
+            todo.cli.append_todo([str(i), "testing", "append"])
 
         self.assertNumLines(self.num, "Test\s\d+\stesting\sappend")
 

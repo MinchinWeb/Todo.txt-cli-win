@@ -25,28 +25,28 @@ import base
 
 class TestList(base.BaseTest):
     def test_dated(self):
-        todo.addm_todo("\n".join(self._test_lines_date(self.num)))
-        colored, sorted = todo._list_("date", "#\{(\d{4})-(\d{1,2})-(\d{1,2})\}")
+        todo.cli.addm_todo("\n".join(self._test_lines_date(self.num)))
+        colored, sorted = todo.cli._list_("date", "#\{(\d{4})-(\d{1,2})-(\d{1,2})\}")
         self.assert_not_equal(colored, sorted)
         self.assert_dated(colored, sorted)
 
 
     def test_context(self):
-        todo.addm_todo("\n".join(self._test_lines_context(self.num)))
-        colored, sorted = todo._list_("context", "@(\w+)")
+        todo.cli.addm_todo("\n".join(self._test_lines_context(self.num)))
+        colored, sorted = todo.cli._list_("context", "@(\w+)")
         self.assert_not_equal(colored, sorted)
         self.assert_labeled(colored, sorted)
 
 
     def test_project(self):
-        todo.addm_todo("\n".join(self._test_lines_project(self.num)))
-        colored, sorted = todo._list_("project", "\+(\w+)")
+        todo.cli.addm_todo("\n".join(self._test_lines_project(self.num)))
+        colored, sorted = todo.cli._list_("project", "\+(\w+)")
         self.assert_not_equal(colored, sorted)
         self.assert_labeled(colored, sorted)
 
     def test_nofile(self):
-        os.unlink(todo.CONFIG["TODO_FILE"])
-        colored, sorted = todo._list_("pri", None)
+        os.unlink(todo.cli.CONFIG["TODO_FILE"])
+        colored, sorted = todo.cli._list_("pri", None)
 
 
     # In order to test ./todo.py ls args I'll need a good way of redirecting
@@ -54,7 +54,7 @@ class TestList(base.BaseTest):
     #def test_ls(self):
     # 	lines = "\n".join(self._test_lines_pri(self.num))
     # 	lines[-1] = lines[-1] + " I'm looking for this"
-    # 	todo.addm_todo(lines)
+    # 	todo.cli.addm_todo(lines)
 
 
     def assert_dated(self, colored, lines):

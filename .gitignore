@@ -9,7 +9,7 @@ docs/_build/
 build/
 dist/
 env/
-env3/
+env*/
 *.tfn
 
 # Microsoft Visual Studio 2013 PyTools files

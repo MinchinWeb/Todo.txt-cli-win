@@ -28,15 +28,15 @@ except:
 class DeprioritizeTest(base.BaseTest):
 
     def test_deprioritize(self):
-        todo.addm_todo("\n".join(self._test_lines_pri(self.num)))
+        todo.cli.addm_todo("\n".join(self._test_lines_pri(self.num)))
 
         for i in range(0, self.num):
-            todo.de_prioritize_todo(str(i + 1))
+            todo.cli.de_prioritize_todo(str(i + 1))
 
         self.assertNumLines(self.num, "Test\s\d+")
 
         for i in range(0, self.num):
-            todo.de_prioritize_todo(str(i + 1))
+            todo.cli.de_prioritize_todo(str(i + 1))
 
         self.assertNumLines(self.num, "Test\s\d+")
 
