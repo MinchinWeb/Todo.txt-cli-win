@@ -1,6 +1,14 @@
 wm_todo
 =======
 
+Note: Depreciated
+-----------------
+
+**Please note that this project is no longer maintained, as I hit the limits of what it could do, and have moved to** `topydo <https://github.com/bram85/topydo>`_, **which is a more powerful implementation of similiar functionalitiy.**
+
+--- End Note ---
+
+
 .. image:: https://secure.travis-ci.org/MinchinWeb/Todo.txt-python.png?branch=development
     :alt: Build Status
     :target: http://travis-ci.org/MinchinWeb/Todo.txt-python
